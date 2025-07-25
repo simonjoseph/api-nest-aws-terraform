@@ -2,10 +2,12 @@ import { Body, Controller, Post } from "@nestjs/common";
 import { CreateUserRequestDTO } from "./dto/CreateUserRequest.dto";
 import { CreateUserResponseDto } from "./dto/CreateUserResponse.dto";
 import { ApiResponse, ApiTags } from "@nestjs/swagger";
+import { UsersService } from "@root/service/users.service";
 
 @ApiTags('users')
 @Controller('users')
 export class UsersController{
+    constructor(private readonly usersService: UsersService) {}
 
     @Post()
     @ApiResponse({
@@ -14,7 +16,12 @@ export class UsersController{
         type: CreateUserResponseDto
     })
     public async createUser(@Body() createUserBody: CreateUserRequestDTO): Promise<CreateUserResponseDto> {
-        console.log('Creating user with body:', createUserBody);
-        return {id: 'true'}
+        const createdUserId = await this.usersService.createUser({
+            name: createUserBody.name,
+            email: createUserBody.email,
+            password: createUserBody.password
+        })
+        
+        return new CreateUserResponseDto(createdUserId);
     }
 }

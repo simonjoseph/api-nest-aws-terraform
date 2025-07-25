@@ -6,4 +6,8 @@ export class CreateUserResponseDto {
         example: 'Asds-1234-5678-90ab-cdef12345678',
     })
     public id: string;
+
+    constructor(id: string) {
+        this.id = id;
+    }
 }
